@@ -1,0 +1,37 @@
+:host {
+  .legend {
+    small {
+      font-size: x-small;
+    }
+  }
+}
+
+c-card-body h5[cCardTitle] {
+  text-align: center;
+}
+
+.custom-card-group {
+  display: flex;
+  gap: 20px; 
+}
+
+.parent-container {
+  display: flex;
+  justify-content: right;
+  align-items: right;
+  position: relative; 
+}
+
+.kosarica {
+  position: relative; /* Positioning context for the badge */
+  padding: 0px; /* Optional: add padding to ensure badge doesn’t overlap content */
+}
+
+.badge-position {
+  position: absolute;
+  top: 5px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  transform: translate(50%, -50%);
+  z-index: 1; /* Ensure the badge appears above the button */
+}
+

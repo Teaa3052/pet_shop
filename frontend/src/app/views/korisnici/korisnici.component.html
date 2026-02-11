@@ -1,0 +1,76 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-body>
+        <button cButton (click)="test()" color="secondary" class="buttonDodaj">Dodaj korisnika</button> 
+        <c-modal id="liveDemoModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+          <c-modal-header>
+            <h5 cModalTitle>Dodaj novog korisnika</h5>
+            <button (click)="test()" cButtonClose></button>
+          </c-modal-header>
+          <c-modal-body>
+            <form cForm> 
+              <div> 
+                <label for="naziv">Ime: </label> <br>
+                <input  id="naziv"
+                        aria-label="default input example"
+                        cFormControl
+                        placeholder=" "
+                        type="text"
+                        style="width: 465px;">
+                      <br><br>
+              </div>
+              <div> 
+                <label for="naziv">Prezime: </label> <br>
+                <input  id="šifra"
+                        aria-label="default input example"
+                        cFormControl
+                        placeholder=" "
+                        type="text"
+                        style="width: 465px;">
+                      <br><br>
+              </div>
+              <div> 
+                <label for="naziv">Šifra: </label> <br>
+                <input  id="cijena"
+                        aria-label="default input example"
+                        cFormControl
+                        placeholder=" "
+                        type="text"
+                        style="width: 465px;">
+                      <br><br>
+              </div>
+                </form>
+          </c-modal-body>
+          <c-modal-footer>
+            <button (click)="test()" cButton color="secondary">
+              Zatvori
+            </button>
+            <button cButton color="primary">Spremi promjene</button>
+          </c-modal-footer>
+        </c-modal>
+        <br>
+        <br>
+          <table [hover]="true" cTable color="dark">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Ime</th>
+              <th scope="col">Prezime</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let a of korisnici; index as i">
+              <th scope="row">{{i+1}}</th>
+              <td>{{a.ime}}</td>
+              <td>{{a.prezime}}</td>
+              <td>
+                <img src="assets/images/trash.png" alt="Trash">
+              </td>
+            </tr>
+            </tbody>
+          </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  

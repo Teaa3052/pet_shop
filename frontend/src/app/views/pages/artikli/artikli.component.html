@@ -1,0 +1,32 @@
+<c-col xs="12">
+  <c-card class="mb-4">
+    <c-card-header>
+    </c-card-header>
+    <c-card-body>
+      <button cButton color="dark">Početna</button>
+      <br>
+      <strong>Račun</strong> 
+        <table [hover]="true" cTable color="dark">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Naziv</th>
+            <th scope="col">Šifra</th>
+            <th scope="col">Cijena</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let a of artikli">
+            <th scope="row"></th>
+            <td>{{a.naziv}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+     
+          </tbody>
+        </table>
+    </c-card-body>
+  </c-card>
+</c-col>

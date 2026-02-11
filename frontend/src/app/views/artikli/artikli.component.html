@@ -1,0 +1,79 @@
+<c-col xs="12">
+  <c-card class="mb-4">
+    <c-card-body>
+      <button cButton (click)="test()" color="secondary" class="buttonDodaj">Novi artikl</button> 
+      <c-modal id="liveDemoModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+        <c-modal-header>
+          <h5 cModalTitle>Dodaj novi artikl</h5>
+        </c-modal-header>
+        <c-modal-body>
+          <form cForm> 
+            <div> 
+              <label for="naziv">Naziv: </label> <br>
+              <input  id="naziv"
+                      aria-label="default input example"
+                      cFormControl
+                      placeholder=" "
+                      type="text"
+                      style="width: 465px;">
+                    <br><br>
+            </div>
+            <div> 
+              <label for="naziv">Šifra: </label> <br>
+              <input  id="šifra"
+                      aria-label="default input example"
+                      cFormControl
+                      placeholder=" "
+                      type="text"
+                      style="width: 465px;">
+                    <br><br>
+            </div>
+            <div> 
+              <label for="naziv">Cijena: </label> <br>
+              <input  id="cijena"
+                      aria-label="default input example"
+                      cFormControl
+                      placeholder=" "
+                      type="text"
+                      style="width: 465px;">
+                    <br><br>
+            </div>
+              </form>
+        </c-modal-body>
+        <c-modal-footer>
+          <button (click)="test()" cButton color="secondary">
+            Zatvori
+          </button>
+          <button cButton color="primary">Spremi promjene</button>
+        </c-modal-footer>
+      </c-modal>
+      <br>
+      <br>
+        <table [hover]="true" cTable color="dark">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Naziv</th>
+            <th scope="col">Šifra</th>
+            <th scope="col">Cijena</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let a of artikli; index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{a.naziv}}</td>
+            <td>{{a.sifra}}</td>
+            <td>{{a.cijena}}</td>
+            <td>
+              <img src="assets/images/trash.png" alt="Trash">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+    </c-card-body>
+  </c-card>
+</c-col>
+
+
+
