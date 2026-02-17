@@ -3,7 +3,8 @@ import {
   getUserById,
   getAllUsers,
   updateUser,
-  deleteUser as deleteUserModel
+  deleteUser as deleteUserModel,
+  createUserNoPassword
 } from '../models/userModel.js';
 
 // GET /api/korisnik
@@ -30,24 +31,28 @@ export const getUser = async (req, res) => {
     }
 };
 
-// POST /api/korisnik
-export const addUser = async (req, res) => {
-  const { ime, email, password } = req.body;
+export const addUserNoPass = async (req, res) => {
+  const { ime, prezime, email } = req.body;
 
   try {
-    const newUser = await createUser(ime, email, password);
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  const newUser = await createUserNoPassword(ime, prezime, email);
+  res.status(201).json(newUser);
+} catch (err) {
+  if (err.code === '23505') { // unique_violation
+    return res.status(400).json({ error: 'Email već postoji!' });
   }
+  res.status(500).json({ error: err.message });
+}
+
 };
+
 
 // PUT api/korisnik/:id
 export const updateUserController = async (req, res) => {
-  const {ime, email} = req.body;
+  const {ime, prezime, email} = req.body;
 
   try {
-    const updated = await updateUser(req.params.id, ime, email);
+    const updated = await updateUser(req.params.id, ime, prezime, email);
     if (!updated) {
       return res.status(404).json({ error: 'Korisnik nije pronaden!' });
     } 

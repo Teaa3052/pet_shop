@@ -1,76 +1,116 @@
 <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-body>
-        <button cButton (click)="test()" color="secondary" class="buttonDodaj">Dodaj korisnika</button> 
-        <c-modal id="liveDemoModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
-          <c-modal-header>
-            <h5 cModalTitle>Dodaj novog korisnika</h5>
-            <button (click)="test()" cButtonClose></button>
-          </c-modal-header>
-          <c-modal-body>
-            <form cForm> 
-              <div> 
-                <label for="naziv">Ime: </label> <br>
-                <input  id="naziv"
-                        aria-label="default input example"
-                        cFormControl
-                        placeholder=" "
-                        type="text"
-                        style="width: 465px;">
-                      <br><br>
-              </div>
-              <div> 
-                <label for="naziv">Prezime: </label> <br>
-                <input  id="šifra"
-                        aria-label="default input example"
-                        cFormControl
-                        placeholder=" "
-                        type="text"
-                        style="width: 465px;">
-                      <br><br>
-              </div>
-              <div> 
-                <label for="naziv">Šifra: </label> <br>
-                <input  id="cijena"
-                        aria-label="default input example"
-                        cFormControl
-                        placeholder=" "
-                        type="text"
-                        style="width: 465px;">
-                      <br><br>
-              </div>
-                </form>
-          </c-modal-body>
-          <c-modal-footer>
-            <button (click)="test()" cButton color="secondary">
-              Zatvori
-            </button>
-            <button cButton color="primary">Spremi promjene</button>
-          </c-modal-footer>
-        </c-modal>
-        <br>
-        <br>
-          <table [hover]="true" cTable color="dark">
-            <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Ime</th>
-              <th scope="col">Prezime</th>
-              <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let a of korisnici; index as i">
-              <th scope="row">{{i+1}}</th>
-              <td>{{a.ime}}</td>
-              <td>{{a.prezime}}</td>
-              <td>
-                <img src="assets/images/trash.png" alt="Trash">
-              </td>
-            </tr>
-            </tbody>
-          </table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-  
+  <c-card class="mb-4">
+    <c-card-body>
+
+      <!-- Gumb za otvaranje modala -->
+      <button cButton color="secondary" class="buttonDodaj" (click)="otvoriModal()">
+        Dodaj korisnika
+      </button>
+
+      <!-- MODAL ZA DODAVANJE -->
+      <c-modal [visible]="visible">
+        <c-modal-header>
+          <h5 cModalTitle>Dodaj novog korisnika</h5>
+          <button cButtonClose (click)="zatvoriModal()"></button>
+        </c-modal-header>
+
+        <c-modal-body>
+          <form cForm #f="ngForm">
+
+            <!-- IME -->
+            <div>
+              <label for="ime">Ime:</label><br>
+              <input
+                id="ime"
+                name="ime"
+                type="text"
+                [(ngModel)]="noviKorisnik.ime"
+                style="width: 465px;"
+              >
+              <br><br>
+            </div>
+
+            <!-- PREZIME -->
+            <div>
+              <label for="prezime">Prezime:</label><br>
+              <input
+                id="prezime"
+                name="prezime"
+                type="text"
+                [(ngModel)]="noviKorisnik.prezime"
+                style="width: 465px;"
+              >
+              <br><br>
+            </div>
+
+            <!-- EMAIL -->
+            <div>
+              <label for="email">Email:</label><br>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                [(ngModel)]="noviKorisnik.email"
+                style="width: 465px;"
+              >
+              <br><br>
+            </div>
+
+          </form>
+        </c-modal-body>
+
+        <c-modal-footer>
+          <button cButton color="secondary" (click)="zatvoriModal()">Zatvori</button>
+          <button cButton color="primary" (click)="spremiKorisnika()">Spremi</button>
+        </c-modal-footer>
+      </c-modal>
+
+      <!-- MODAL ZA POTVRDU BRISANJA -->
+      <c-modal [visible]="potvrdaVisible">
+        <c-modal-header>
+          <h5 cModalTitle>Potvrda brisanja</h5>
+          <button cButtonClose (click)="zatvoriPotvrdu()"></button>
+        </c-modal-header>
+
+        <c-modal-body>
+          <p>Jesi li sigurna da želiš obrisati ovog korisnika?</p>
+        </c-modal-body>
+
+        <c-modal-footer>
+          <button cButton color="secondary" (click)="zatvoriPotvrdu()">Odustani</button>
+          <button cButton color="danger" (click)="potvrdiBrisanje()">Obriši</button>
+        </c-modal-footer>
+      </c-modal>
+
+      <br><br>
+
+      <!-- TABLICA -->
+      <table [hover]="true" cTable color="dark">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of korisnici; index as i">
+            <th>{{ i + 1 }}</th>
+            <td>{{ a.ime }}</td>
+            <td>{{ a.prezime }}</td>
+            <td>
+              <img 
+                src="assets/images/trash.png" 
+                alt="Trash"
+                style="cursor: pointer;"
+                (click)="otvoriPotvrdu(a.idkorisnik)"
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </c-card-body>
+  </c-card>
+</c-col>

@@ -33,14 +33,14 @@ async function getUserById(id) {
     return result.rows[0] 
 } 
 
-async function updateUser(id, ime, email) {
+async function updateUser(id, ime, prezime, email) {
     const query = `
     UPDATE korisnik 
-    SET ime = $1, email = $2
-    WHERE idkorisnik = $3
+    SET ime = $1, prezime = $2, email = $3
+    WHERE idkorisnik = $4
     RETURNING *
     `; 
-    const values = [ime, email, id];
+    const values = [ime, prezime, email, id];
     const result = await pool.query(query, values);
     return result.rows[0];
 }
@@ -51,5 +51,18 @@ async function deleteUser(id) {
     return true;
 }
 
+async function createUserNoPassword(ime, prezime, email) {
+  const query = `
+    INSERT INTO korisnik (ime, prezime, email)
+    VALUES ($1, $2, $3)
+    RETURNING idkorisnik, ime, prezime, email
+  `;
 
-export { createUser, findByEmail, getAllUsers, getUserById, updateUser, deleteUser }
+  const values = [ime, prezime, email];
+
+  const result = await pool.query(query, values);
+  return result.rows[0];
+}
+
+
+export { createUser, findByEmail, getAllUsers, getUserById, updateUser, deleteUser, createUserNoPassword }

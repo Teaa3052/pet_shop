@@ -5,7 +5,7 @@ import pool from './db.js';
 
 import authRoutes from './routes/auth.routes.js';
 import korisnikRoutes from './routes/korisnik.routes.js';
-//import artikliRoutes from './routes/artikli.routes.js';
+import artikliRoutes from './routes/artikli.routes.js';
 //import cartRoutes from './routes/cart.routes.js';
 //import orderRoutes from './routes/order.routes.js';
 
@@ -27,7 +27,7 @@ app.use(session({
 
 app.use('/api/auth', authRoutes);
 app.use('/api/korisnik', korisnikRoutes);
-//app.use('/artikli', artikliRoutes);
+app.use('/api/artikli', artikliRoutes);
 //app.use('/cart', cartRoutes)
 //app.use('/order', orderRoutes);
 

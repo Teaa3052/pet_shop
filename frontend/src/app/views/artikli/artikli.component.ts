@@ -1,4 +1,4 @@
-import { Component, inject  } from '@angular/core';
+import { Component} from '@angular/core';
 import { RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, TableDirective, TableColorDirective, TableActiveDirective, BorderDirective, AlignDirective } from '@coreui/angular';
 import {
   ButtonCloseDirective,
@@ -10,35 +10,38 @@ import {
   ModalTitleDirective,
   ThemeDirective
 } from '@coreui/angular';
-import { DocsExampleComponent } from '@docs-components/public-api';
 import { CommonModule } from '@angular/common';
+import { OnInit } from '@angular/core';
+import { ArtikliService } from '../../services/artikli.service';
+
 
 @Component({
   selector: 'app-artikli',
   standalone: true,
-  imports: [DocsExampleComponent, CommonModule, RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, TableDirective, TableColorDirective, TableActiveDirective, BorderDirective, AlignDirective, ButtonDirective, ModalComponent, ModalHeaderComponent, ModalTitleDirective, ThemeDirective, ButtonCloseDirective, ModalBodyComponent, ModalFooterComponent],
+  imports: [ CommonModule, RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, TableDirective, TableColorDirective, TableActiveDirective, BorderDirective, AlignDirective, ButtonDirective, ModalComponent, ModalHeaderComponent, ModalTitleDirective, ThemeDirective, ButtonCloseDirective, ModalBodyComponent, ModalFooterComponent],
   templateUrl: './artikli.component.html',
   styleUrl: './artikli.component.scss'
 })
-export class ArtikliComponent {
 
+export class ArtikliComponent implements OnInit {
 
-  artikli = [
-    {
-      id: 1,
-      naziv: 'Ogrilica za pse',
-      sifra: '142535',
-      cijena: 10.50
-    },
-    {
-      id: 2,
-      naziv: 'Hrana za pse',
-      sifra: '213214',
-      cijena: 20
-    }
-  ]
-  constructor(){
-   
+  artikli: any [] = [];
+
+  constructor(private artikliService: ArtikliService ) {}
+
+  ngOnInit(): void {
+      this.ucitajArtikle();
+  }
+
+  ucitajArtikle() {
+    this.artikliService.getArtikli().subscribe({
+      next: (data: any[]) =>{
+        this.artikli = data; 
+      },
+      error: (err: any) => {
+        console.error("Greska pri dohvacanju artikala", err)
+      }
+    })
   }
 
   test(){
