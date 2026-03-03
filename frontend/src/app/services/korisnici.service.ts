@@ -8,18 +8,25 @@ import { HttpClient } from '@angular/common/http';
 
 export class KorisniciService { 
 
+    private apiUrl = 'http://localhost:3000/api/korisnik';
+
     constructor(private http: HttpClient) {}
 
 getKorisnici() {
-  return this.http.get<any[]>('http://localhost:3000/api/korisnik');
+  return this.http.get<any[]>(this.apiUrl, {
+      withCredentials: true    
+    });
 }
 
 addKorisnik(korisnik: any) {
-    return this.http.post('http://localhost:3000/api/korisnik', korisnik)
+    return this.http.post(this.apiUrl, korisnik, {
+        withCredentials: true
+    });
 }
 
 deleteKorisnik(id: number){
-    return this.http.delete(`http://localhost:3000/api/korisnik/${id}`
-);
-}
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+        withCredentials: true
+        });
+    }
 }

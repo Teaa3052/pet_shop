@@ -6,13 +6,12 @@ import {
     deleteUser,
     addUserNoPass
 } from '../controllers/korisnikController.js';
+import { requireRole } from '../middleware/requireRole.js';
 
 const router = express.Router() 
 
-router.get('/', getUsers);
-router.get('/:id', getUser);
-router.post('/', addUserNoPass);
-router.put('/:id', updateUserController);
-router.delete('/:id', deleteUser);
+router.get('/', requireRole('superuser'), getUsers);
+router.post('/', requireRole('superuser'), addUserNoPass);
+router.delete('/:id', requireRole('superuser'), deleteUser);
 
 export default router; 

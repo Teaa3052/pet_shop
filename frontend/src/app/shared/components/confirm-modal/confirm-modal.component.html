@@ -1,0 +1,15 @@
+<c-modal [visible]="visible">
+  <c-modal-header>
+    <h5 cModalTitle>{{ title }}</h5>
+    <button cButtonClose (click)="onCancel()"></button>
+  </c-modal-header>
+
+  <c-modal-body>
+    <p>{{ message }}</p>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="onCancel()">Odustani</button>
+    <button cButton color="danger" (click)="onConfirm()">Potvrdi</button>
+  </c-modal-footer>
+</c-modal>

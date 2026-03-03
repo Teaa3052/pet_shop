@@ -2,6 +2,8 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import pool from './db.js';
+import connectPgSimple from 'connect-pg-simple';
+
 
 import authRoutes from './routes/auth.routes.js';
 import korisnikRoutes from './routes/korisnik.routes.js';
@@ -11,6 +13,8 @@ import artikliRoutes from './routes/artikli.routes.js';
 
 const app = express(); 
 
+const PgSession = connectPgSimple(session);
+
 app.use(cors ({
     origin: 'http://localhost:4200',
     credentials: true
@@ -19,10 +23,18 @@ app.use(cors ({
 app.use(express.json());
 
 app.use(session({
+    store: new PgSession({
+        pool: pool,
+        tableName: 'session'
+    }),
     secret: 'petshop-secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax'
+    }
 }));
 
 app.use('/api/auth', authRoutes);

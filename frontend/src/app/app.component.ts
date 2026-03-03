@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   title = 'Pet Shop';
 
   constructor(
-    private router: Router,
+    private auth: AuthService,
     private titleService: Title,
     private iconSetService: IconSetService
   ) {
@@ -25,11 +25,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-        return;
-      }
+    this.auth.loadUserFromStorage();
+
+    this.auth.checkSession().subscribe({
+      next: user => this.auth.setUser(user),
+      error: () => this.auth.setUser(null)
     });
   }
+
 }
-// Glavna komponenta angular aplikacije koja služi samo kao okvir i prikazuje sve ostale stranice kroz <router-outlet>
+
+
+// Glavna komponenta angular aplikacije koja služi samo kao okvir i prikazuje sve 
+// ostale stranice kroz <router-outlet>

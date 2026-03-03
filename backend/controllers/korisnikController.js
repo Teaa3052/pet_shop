@@ -23,7 +23,7 @@ export const getUser = async (req, res) => {
     const user = await getUserById(req.params.id); 
 
     if (!user) {
-      return res.status(404).json({ error: "Korisnik nije pronađen"});
+      return res.status(404).json({ error: "User not found"});
     }
     res.json(user);
     } catch (err) {
@@ -39,7 +39,7 @@ export const addUserNoPass = async (req, res) => {
   res.status(201).json(newUser);
 } catch (err) {
   if (err.code === '23505') { // unique_violation
-    return res.status(400).json({ error: 'Email već postoji!' });
+    return res.status(400).json({ error: 'Email already exist' });
   }
   res.status(500).json({ error: err.message });
 }
@@ -54,7 +54,7 @@ export const updateUserController = async (req, res) => {
   try {
     const updated = await updateUser(req.params.id, ime, prezime, email);
     if (!updated) {
-      return res.status(404).json({ error: 'Korisnik nije pronaden!' });
+      return res.status(404).json({ error: 'User not found' });
     } 
     res.json(updated)
   } catch (err) {
@@ -64,16 +64,20 @@ export const updateUserController = async (req, res) => {
 
 // DELETE /api/korisnik/:id
 export const deleteUser = async (req, res) => {
+
+  const id = req.params.id; 
+  if (req.session.user.id == Number(id)) {
+    return res.status(400).json({ message: "Superuser cannot delete themselves"});
+  }
   try {
     const success = await deleteUserModel(req.params.id);
 
     if (!success) {
-      return res.status(404).json({ error: 'Korisnik nije pronaden! '});
+      return res.status(404).json({ error: 'User not found'});
     }
-    res.json({ message: 'Korisnik uspjesno obrisan! '})
+    res.json({ message: 'User successfully deleted'})
   } catch (err) {
     res.status(500).json({error: err.message});
   }
 }
 
-// malo proučit ovo 

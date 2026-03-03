@@ -54,16 +54,35 @@
         alt="User avatar"
       />
     </button>
+
     <ul cDropdownMenu class="pt-0 w-auto">
+
+      <!-- Logout ako je korisnik logiran -->
       <li>
-        <a cDropdownItem routerLink="">
+        <button *ngIf="user$ | async"
+                cDropdownItem
+                type="button"
+                (click)="onLogout()">
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
           Logout
-        </a>
+        </button>
       </li>
+
+      <!-- Login ako NIJE logiran -->
+      <li>
+        <button *ngIf="!(user$ | async)"
+                cDropdownItem
+                type="button"
+                (click)="goToLogin()">
+          <svg cIcon class="me-2" name="cilUser"></svg>
+          Login
+        </button>
+      </li>
+
     </ul>
   </c-dropdown>
 </ng-template>
+
 
 <ng-template #themeDropdown>
   <c-dropdown alignment="end" variant="nav-item">

@@ -1,6 +1,6 @@
 import pool from '../db.js' 
 
-async function createUser (ime, email, passwordHash) {
+export const createUser = async (ime, email, passwordHash) => {
     const query = `
         INSERT INTO korisnik (ime, email, password)
         VALUES ($1, $2, $3) 
@@ -13,7 +13,7 @@ async function createUser (ime, email, passwordHash) {
     return result.rows[0]
 }
 
-async function findByEmail(email) {
+export const findByEmail = async (email) => {
     const query = `SELECT * FROM korisnik WHERE email = $1` 
     const values = [email]
 
@@ -22,18 +22,18 @@ async function findByEmail(email) {
 
 }
 
-async function getAllUsers() {
+export const getAllUsers = async () => {
     const result = await pool.query('SELECT * FROM korisnik');
     return result.rows;
 }
 
-async function getUserById(id) {
+export  const getUserById = async (id) => {
     const query = `SELECT * FROM korisnik WHERE idkorisnik = $1`;
     const result = await pool.query(query, [id]);
     return result.rows[0] 
 } 
 
-async function updateUser(id, ime, prezime, email) {
+export const updateUser = async (id, ime, prezime, email) => {
     const query = `
     UPDATE korisnik 
     SET ime = $1, prezime = $2, email = $3
@@ -45,13 +45,13 @@ async function updateUser(id, ime, prezime, email) {
     return result.rows[0];
 }
 
-async function deleteUser(id) {
+export const deleteUser = async (id) => {
     const query = `DELETE FROM korisnik WHERE idkorisnik = $1`;
     await pool.query(query, [id]);
     return true;
 }
 
-async function createUserNoPassword(ime, prezime, email) {
+export const createUserNoPassword = async (ime, prezime, email) => {
   const query = `
     INSERT INTO korisnik (ime, prezime, email)
     VALUES ($1, $2, $3)
@@ -65,4 +65,3 @@ async function createUserNoPassword(ime, prezime, email) {
 }
 
 
-export { createUser, findByEmail, getAllUsers, getUserById, updateUser, deleteUser, createUserNoPassword }

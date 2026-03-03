@@ -1,22 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
-import { IconDirective } from '@coreui/icons-angular';
 import {
-  ContainerComponent,
-  ShadowOnScrollDirective,
-  SidebarBrandComponent,
   SidebarComponent,
-  SidebarFooterComponent,
   SidebarHeaderComponent,
+  SidebarBrandComponent,
+  SidebarFooterComponent,
   SidebarNavComponent,
   SidebarToggleDirective,
-  SidebarTogglerDirective
+  SidebarTogglerDirective,
+  ContainerComponent,
+  ShadowOnScrollDirective
 } from '@coreui/angular';
 
-import { DefaultFooterComponent, DefaultHeaderComponent } from './';
+import { IconDirective } from '@coreui/icons-angular';
+import { DefaultHeaderComponent, DefaultFooterComponent } from './';
 import { navItems } from './_nav';
+import { INavData } from '@coreui/angular';
+import { AuthService } from '../../services/auth.service';
+
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -34,26 +37,38 @@ function isOverflown(element: HTMLElement) {
     SidebarComponent,
     SidebarHeaderComponent,
     SidebarBrandComponent,
-    RouterLink,
-    IconDirective,
-    NgScrollbar,
     SidebarNavComponent,
     SidebarFooterComponent,
     SidebarToggleDirective,
     SidebarTogglerDirective,
-    DefaultHeaderComponent,
     ShadowOnScrollDirective,
+
+    DefaultHeaderComponent,
+    DefaultFooterComponent,
+
     ContainerComponent,
     RouterOutlet,
-    DefaultFooterComponent
+    NgScrollbar,
+    IconDirective,
+    RouterLink,
+
   ]
 })
-export class DefaultLayoutComponent {
-  public navItems = navItems;
+export class DefaultLayoutComponent implements OnInit {
+  
+  public navItemsFiltered: INavData[] = []; 
 
-  onScrollbarUpdate($event: any) {
-    // if ($event.verticalUsed) {
-    // console.log('verticalUsed', $event.verticalUsed);
-    // }
+  constructor(private auth: AuthService) {} 
+
+  ngOnInit(): void {
+      const user = this.auth.currentUserValue;
+
+      if(user?.role == 'superuser') {
+        this.navItemsFiltered = navItems;
+      } else {
+        this.navItemsFiltered = navItems.filter(item => item.name != 'Korisnici')
+      }
   }
+
+  onScrollbarUpdate(_event: any) {}
 }

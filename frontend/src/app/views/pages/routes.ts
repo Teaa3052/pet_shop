@@ -17,7 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'artikli',
-    loadComponent: () => import('./artikli/artikli.component').then(m => m.ArtikliComponent),
+    loadComponent: () => import('../artikli/artikli.component').then(m => m.ArtikliComponent),
     data: {
       title: 'Artikli Page'
     }

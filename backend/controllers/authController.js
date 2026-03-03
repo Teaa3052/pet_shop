@@ -41,10 +41,11 @@ export async function login(req, res) {
 
     req.session.user = {
       id: user.idkorisnik,
-      ime: user.ime
+      ime: user.ime,
+      role: user.role
     };
 
-    return res.json(req.session.user);
+    return res.json({ user: req.session.user });
 
   } catch (err) {
     console.error("Error:", err.message);
@@ -55,6 +56,12 @@ export async function login(req, res) {
 export function logout(req, res) {
   req.session.destroy(err => {
     if (err) return res.status(500).json({ message: 'Logout failed' });
+
+    res.clearCookie('connect.sid', {
+      path:'/',
+      httpOnly: true,
+      secure: false
+    })
     return res.json({ message: 'Logged out' });
   });
 }

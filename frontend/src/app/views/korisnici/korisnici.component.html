@@ -1,9 +1,12 @@
 <c-col xs="12">
   <c-card class="mb-4">
     <c-card-body>
-
       <!-- Gumb za otvaranje modala -->
-      <button cButton color="secondary" class="buttonDodaj" (click)="otvoriModal()">
+      <button 
+        *ngIf="isSuperuser"
+        cButton color="secondary" 
+        class="buttonDodaj" 
+        (click)="otvoriModal()">
         Dodaj korisnika
       </button>
 
@@ -13,47 +16,44 @@
           <h5 cModalTitle>Dodaj novog korisnika</h5>
           <button cButtonClose (click)="zatvoriModal()"></button>
         </c-modal-header>
+      <c-modal-body>
 
-        <c-modal-body>
-          <form cForm #f="ngForm">
+
+          <form cForm>
 
             <!-- IME -->
-            <div>
-              <label for="ime">Ime:</label><br>
+            <div class="mb-3">
+              <label for="ime">Ime:</label>
               <input
                 id="ime"
                 name="ime"
                 type="text"
-                [(ngModel)]="noviKorisnik.ime"
-                style="width: 465px;"
-              >
-              <br><br>
+                class="form-control"
+                [(ngModel)]="noviKorisnik.ime"              >
             </div>
 
             <!-- PREZIME -->
-            <div>
-              <label for="prezime">Prezime:</label><br>
+            <div class="mb-3">
+              <label for="prezime">Prezime:</label>
               <input
                 id="prezime"
                 name="prezime"
                 type="text"
+                class="form-control"
                 [(ngModel)]="noviKorisnik.prezime"
-                style="width: 465px;"
               >
-              <br><br>
             </div>
 
             <!-- EMAIL -->
-            <div>
-              <label for="email">Email:</label><br>
+            <div class="mb-3">
+              <label for="email">Email:</label>
               <input
                 id="email"
                 name="email"
                 type="email"
+                class="form-control"
                 [(ngModel)]="noviKorisnik.email"
-                style="width: 465px;"
               >
-              <br><br>
             </div>
 
           </form>
@@ -104,7 +104,7 @@
                 src="assets/images/trash.png" 
                 alt="Trash"
                 style="cursor: pointer;"
-                (click)="otvoriPotvrdu(a.idkorisnik)"
+                (click)="otvoriPotvrdu(a)"
               >
             </td>
           </tr>

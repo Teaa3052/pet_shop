@@ -71,7 +71,6 @@ export class DashboardComponent implements OnInit {
 
   public visible = false;
 
-  // Methods for incrementing and decrementing item count
   increment(index: number) {
     this.items[index].count++;
   }
@@ -82,7 +81,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Method to calculate total items count
   getTotalItemCount(): number {
     return this.items.reduce((acc, item) => acc + item.count, 0);
   }

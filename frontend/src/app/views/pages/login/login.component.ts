@@ -29,7 +29,8 @@ export class LoginComponent {
 
   onLogin() {
     this.authService.login(this.email, this.password).subscribe({
-      next: () => {
+      next: (res) => {
+        this.authService.setUser(res.user);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => { 

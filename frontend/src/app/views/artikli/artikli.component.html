@@ -1,79 +1,132 @@
 <c-col xs="12">
   <c-card class="mb-4">
     <c-card-body>
-      <button cButton (click)="test()" color="secondary" class="buttonDodaj">Novi artikl</button> 
-      <c-modal id="liveDemoModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+      
+      <!-- GUMB ZA DODAVANJE ARTIKLA -->
+      <button
+        *ngIf="isSuperuser"
+        cButton
+        color="secondary"
+        class="buttonDodaj"
+        (click)="toggleModal()">
+        Novi artikl
+      </button>
+
+      <!-- MODAL ZA DODAVANJE -->
+      <c-modal [visible]="visible">
         <c-modal-header>
           <h5 cModalTitle>Dodaj novi artikl</h5>
+          <button cButtonClose (click)="toggleModal()"></button>
         </c-modal-header>
         <c-modal-body>
-          <form cForm> 
-            <div> 
-              <label for="naziv">Naziv: </label> <br>
-              <input  id="naziv"
-                      aria-label="default input example"
-                      cFormControl
-                      placeholder=" "
-                      type="text"
-                      style="width: 465px;">
-                    <br><br>
+
+          <form cForm>
+            <!-- NAZIV -->
+            <div class="mb-3">
+              <label for="naziv">Naziv:</label>
+              <input
+                id="naziv"
+                name="naziv"
+                type="text"
+                class="form-control"
+                [(ngModel)]="naziv">
             </div>
-            <div> 
-              <label for="naziv">Šifra: </label> <br>
-              <input  id="šifra"
-                      aria-label="default input example"
-                      cFormControl
-                      placeholder=" "
-                      type="text"
-                      style="width: 465px;">
-                    <br><br>
+            <!-- CIJENA -->
+            <div class="mb-3">
+              <label for="cijena">Cijena:</label>
+              <input
+                id="cijena"
+                name="cijena"
+                type="number"
+                class="form-control"
+                [(ngModel)]="cijena">
             </div>
-            <div> 
-              <label for="naziv">Cijena: </label> <br>
-              <input  id="cijena"
-                      aria-label="default input example"
-                      cFormControl
-                      placeholder=" "
-                      type="text"
-                      style="width: 465px;">
-                    <br><br>
-            </div>
-              </form>
+          </form>
         </c-modal-body>
         <c-modal-footer>
-          <button (click)="test()" cButton color="secondary">
+          <button cButton color="secondary" (click)="toggleModal()">
             Zatvori
           </button>
-          <button cButton color="primary">Spremi promjene</button>
+          <button cButton color="primary" (click)="spremiArtikl()">
+            Spremi
+          </button>
         </c-modal-footer>
       </c-modal>
-      <br>
-      <br>
-        <table [hover]="true" cTable color="dark">
-          <thead>
+
+      <!-- MODAL ZA POTVRDU BRISANJA -->
+      <c-modal [visible]="potvrdaVisible">
+
+        <c-modal-header>
+          <h5 cModalTitle>Potvrda brisanja</h5>
+          <button cButtonClose (click)="zatvoriPotvrdu()"></button>
+        </c-modal-header>
+
+        <c-modal-body>
+          <p>Jeste li sigurni da želite obrisati ovaj artikl?</p>
+        </c-modal-body>
+
+        <c-modal-footer>
+          <button
+            cButton
+            color="secondary"
+            (click)="zatvoriPotvrdu()">
+            Odustani
+          </button>
+
+          <button
+            cButton
+            color="danger"
+            (click)="potvrdiBrisanje()">
+            Obriši
+          </button>
+        </c-modal-footer>
+
+      </c-modal>
+
+      <!-- TABLICA ARTIKALA -->
+      <table
+        cTable
+        [hover]="true"
+        color="dark"
+        class="mt-4">
+
+        <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Naziv</th>
-            <th scope="col">Šifra</th>
-            <th scope="col">Cijena</th>
-            <th scope="col"></th>
+            <th>#</th>
+            <th>Naziv</th>
+            <th>Šifra</th>
+            <th>Cijena</th>
+            <th style="width: 60px;"></th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+
+        <tbody>
           <tr *ngFor="let a of artikli; index as i">
-            <th scope="row">{{i+1}}</th>
-            <td>{{a.naziv}}</td>
-            <td>{{a.sifra}}</td>
-            <td>{{a.cijena}}</td>
+            <th>{{ i + 1 }}</th>
+            <td>{{ a.naziv }}</td>
+            <td>{{ a.sifra }}</td>
+            <td>{{ a.cijena }}</td>
+
             <td>
-              <img src="assets/images/trash.png" alt="Trash">
+              <img
+                *ngIf="isSuperuser"
+                src="assets/images/trash.png"
+                alt="Obriši"
+                style="cursor: pointer; width: 20px;"
+                (click)="otvoriPotvrdu(a)">
             </td>
           </tr>
-          </tbody>
-        </table>
+
+          <!-- Ako nema artikala -->
+          <tr *ngIf="artikli.length === 0">
+            <td colspan="5" class="text-center">
+              Nema artikala za prikaz.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
     </c-card-body>
   </c-card>
 </c-col>
-
-
-

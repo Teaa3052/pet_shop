@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, Input } from '@angular/core';
+import { Component, Input, computed } from '@angular/core';
 import {
   AvatarComponent,
   BadgeComponent,
@@ -22,25 +22,69 @@ import {
   TextColorDirective,
   ThemeDirective
 } from '@coreui/angular';
-import { NgStyle, NgTemplateOutlet } from '@angular/common';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { NgStyle, NgTemplateOutlet, CommonModule } from '@angular/common';
+import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, filter, map, tap } from 'rxjs/operators';
-import { DashboardComponent } from "../../../views/dashboard/dashboard.component";
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
   standalone: true,
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, ThemeDirective, DropdownComponent, DropdownToggleDirective, TextColorDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ProgressBarDirective, ProgressComponent, NgStyle,]
+  imports: [
+    ContainerComponent,
+    CommonModule,
+    HeaderTogglerDirective,
+    SidebarToggleDirective,
+    IconDirective,
+    HeaderNavComponent,
+    NavItemComponent,
+    NavLinkDirective,
+    RouterLink,
+    RouterLinkActive,
+    NgTemplateOutlet,
+    BreadcrumbRouterComponent,
+    ThemeDirective,
+    DropdownComponent,
+    DropdownToggleDirective,
+    TextColorDirective,
+    AvatarComponent,
+    DropdownMenuDirective,
+    DropdownHeaderDirective,
+    DropdownItemDirective,
+    BadgeComponent,
+    DropdownDividerDirective,
+    ProgressBarDirective,
+    ProgressComponent,
+    NgStyle,
+    HeaderComponent,
+    HeaderNavComponent
+  ]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
+export class DefaultHeaderComponent {
 
-  readonly #activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-  readonly #colorModeService = inject(ColorModeService);
-  readonly colorMode = this.#colorModeService.colorMode;
-  readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  // async pipe-friendly observable
+  user$;
+
+  constructor(
+    public auth: AuthService,
+    private router: Router,
+    private colorModeService: ColorModeService
+  ) {
+    this.user$ = this.auth.currentUser$;
+  }
+
+  ngOnInit() {
+    // Dark mode settings
+    this.colorModeService.localStorageItemName.set(
+      'coreui-free-angular-admin-template-theme-default'
+    );
+    this.colorModeService.eventName.set('ColorSchemeChange');
+  }
+
+  get colorMode() {
+    return this.colorModeService.colorMode;
+  }
 
   readonly colorModes = [
     { name: 'light', text: 'Light', icon: 'cilSun' },
@@ -50,28 +94,23 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   readonly icons = computed(() => {
     const currentMode = this.colorMode();
-    return this.colorModes.find(mode=> mode.name === currentMode)?.icon ?? 'cilSun';
+    return this.colorModes.find(mode => mode.name == currentMode)?.icon ?? 'cilSun';
   });
-
-  constructor() {
-    super();
-    this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
-    this.#colorModeService.eventName.set('ColorSchemeChange');
-
-    this.#activatedRoute.queryParams
-      .pipe(
-        delay(1),
-        map(params => <string>params['theme']?.match(/^[A-Za-z0-9\s]+/)?.[0]),
-        filter(theme => ['dark', 'light', 'auto'].includes(theme)),
-        tap(theme => {
-          this.colorMode.set(theme);
-        }),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe();
-  }
 
   @Input() sidebarId: string = 'sidebar1';
 
-  
+  // logout
+  onLogout() {
+    this.auth.logOut().subscribe({
+      next: () => {
+        this.auth.clearUser();
+        this.router.navigate(['/login']);
+      },
+      error: (err) => console.error("LOGOUT ERROR:", err)
+    });
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
 }
