@@ -1,56 +1,53 @@
-# User & Items Management App
+# Pet Shop - E-commerce Platform for Pet Supplies
 
-Angular + CoreUI + REST API - A modern, responsive web application for managing users and items, built with Angular and CoreUI. The app communicates with a backend REST API to fetch, create, and delete data.
+A full-stack e-commerce web application for purchasing pet supplies, built with Angular and CoreUI template on the frontend, and Node.js/Express/PostgreSQL on the backend.
 
 ## Features
 
 ### User Management
-- Display all users
-- Add a new user
-- Delete a user with confirmation modal
-- Form validation
-- Prevent deletion of superuser accounts
+- User registration and authentication
+- Session-based login system
+- Role-based access control (user vs superuser)
+- User profile management
+- Superuser can manage all users
 
-### Item (Artikl) Management
-- Display all items
-- Add a new item
-- Delete an item with confirmation modal
-- Item management available only to superusers
-- Form validation
-
-### Document & Order Management
-- Create documents (orders)
-- Track document items
-- Manage order history
+### Product (Artikl) Management
+- Browse all available pet products
+- Add new products (superuser only)
+- Delete products with confirmation modal (superuser only)
+- Products feature unique codes starting at 1000
+- Form validation for all product inputs
 
 ### Authentication & Authorization
-- User registration
-- User login
-- Session-based authentication
-- Role-based access control (user vs superuser)
-- Route guards for protected pages
+- Secure user registration with password hashing
+- Session-based authentication stored in PostgreSQL
+- Role-based UI (different views for users and superusers)
+- Route guards protecting admin-only pages
+- Automatic session expiration
 
 ### UI / UX
-- Built with CoreUI Angular v5
-- Clean, responsive layout
+- Built with CoreUI Angular v5 free template
+- Clean, responsive layout optimized for all devices
 - Consistent modal dialogs for all critical actions
 - Protected routes with role-based navigation
+- Professional admin dashboard interface
 
 ## Technologies Used
 
 **Frontend**
-- Angular
-- CoreUI Angular v5
+- Angular 18
+- CoreUI Angular v5 (Free Admin Template)
 - TypeScript
 - RxJS
 - Angular Router Guards
+- SCSS for styling
 
 **Backend**
 - Node.js
 - Express
 - PostgreSQL
 - express-session + connect-pg-simple
-- bcrypt
+- bcrypt (password hashing)
 - CORS
 
 ## Project Structure
@@ -58,44 +55,52 @@ Angular + CoreUI + REST API - A modern, responsive web application for managing 
 Pet_shop/
 ├── frontend/
 │   └── src/
-│       └── app/
-│           ├── guards/
-│           │   └── role.guard.ts
-│           ├── services/
-│           │   ├── artikli.service.ts
-│           │   ├── auth.service.ts
-│           │   └── korisnici.service.ts
-│           ├── shared/
-│           │   └── confirm-modal/
-│           │       ├── confirm-modal.component.ts
-│           │       ├── confirm-modal.component.html
-│           │       └── confirm-modal.component.scss
-│           ├── views/
-│           │   ├── artikli/
-│           │   │   ├── artikli.component.ts
-│           │   │   ├── artikli.component.html
-│           │   │   ├── artikli.component.scss
-│           │   │   └── routes.ts
-│           │   ├── dashboard/
-│           │   │   ├── dashboard.component.ts
-│           │   │   ├── dashboard.component.html
-│           │   │   ├── dashboard.component.scss
-│           │   │   └── routes.ts
-│           │   └── korisnici/
-│           │       ├── korisnici.component.ts
-│           │       ├── korisnici.component.html
-│           │       ├── korisnici.component.scss
-│           │       └── routes.ts
-│           └── pages/
-│               ├── login/
-│               │   ├── login.component.ts
-│               │   ├── login.component.html
-│               │   └── login.component.scss
-│               ├── register/
-│               │   ├── register.component.ts
-│               │   ├── register.component.html
-│               │   └── register.component.scss
-│               └── routes.ts
+│       ├── app/
+│       │   ├── guards/
+│       │   │   └── role.guard.ts
+│       │   ├── icons/
+│       │   ├── layout/
+│       │   │   └── default-layout/
+│       │   │       └── _nav.js
+│       │   ├── services/
+│       │   │   ├── artikli.service.ts
+│       │   │   ├── auth.service.ts
+│       │   │   └── korisnici.service.ts
+│       │   ├── shared/
+│       │   │   └── confirm-modal/
+│       │   │       ├── confirm-modal.component.ts
+│       │   │       ├── confirm-modal.component.html
+│       │   │       └── confirm-modal.component.scss
+│       │   └── views/
+│       │       ├── artikli/
+│       │       │   ├── artikli.component.ts
+│       │       │   ├── artikli.component.html
+│       │       │   ├── artikli.component.scss
+│       │       │   └── routes.ts
+│       │       ├── dashboard/
+│       │       │   ├── dashboard.component.ts
+│       │       │   ├── dashboard.component.html
+│       │       │   ├── dashboard.component.scss
+│       │       │   └── routes.ts
+│       │       ├── korisnici/
+│       │       │   ├── korisnici.component.ts
+│       │       │   ├── korisnici.component.html
+│       │       │   ├── korisnici.component.scss
+│       │       │   └── routes.ts
+│       │       └── pages/
+│       │           ├── login/
+│       │           │   ├── login.component.ts
+│       │           │   ├── login.component.html
+│       │           │   └── login.component.scss
+│       │           ├── register/
+│       │           │   ├── register.component.ts
+│       │           │   ├── register.component.html
+│       │           │   └── register.component.scss
+│       │           └── routes.ts
+│       ├── assets/
+│       ├── scss/
+│       ├── index.html
+│       └── angular.json
 │
 └── backend/
     ├── controllers/
@@ -125,9 +130,9 @@ Pet_shop/
 ## Installation & Setup
 
 ### Prerequisites
-- Node.js (v14.x or later)
+- Node.js LTS (v18.19+ or v20.09+)
 - PostgreSQL
-- Angular CLI
+- Angular CLI (v18.0.0+)
 
 ### Backend Setup
 
@@ -146,7 +151,7 @@ npm install
 DB_HOST=localhost
 DB_USER=your_postgres_user
 DB_PASSWORD=your_postgres_password
-DB_NAME=your_database_name
+DB_NAME=petshop_db
 DB_PORT=5432
 SESSION_SECRET=petshop-secret
 PORT=3000
@@ -154,13 +159,13 @@ PORT=3000
 
 4. Create PostgreSQL database and tables:
 ```sql
-CREATE DATABASE your_database_name;
+CREATE DATABASE petshop_db;
 
-\c your_database_name;
+\c petshop_db;
 
 -- Users table
 CREATE TABLE korisnik (
-    id SERIAL PRIMARY KEY,
+    idkorisnik SERIAL PRIMARY KEY,
     ime VARCHAR(100) NOT NULL,
     prezime VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -173,11 +178,10 @@ CREATE TABLE korisnik (
 CREATE SEQUENCE artikl_sifra_seq START WITH 1000;
 
 CREATE TABLE artikl (
-    id SERIAL PRIMARY KEY,
+    idartikl SERIAL PRIMARY KEY,
     sifra INTEGER UNIQUE DEFAULT nextval('artikl_sifra_seq'),
     naziv VARCHAR(255) NOT NULL,
     cijena DECIMAL(10, 2) NOT NULL,
-    opis TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -233,6 +237,10 @@ npm install
 ```bash
 npm start
 ```
+or
+```bash
+ng serve
+```
 
 The app will be available at `http://localhost:4200`
 
@@ -248,66 +256,98 @@ The app will be available at `http://localhost:4200`
 - `POST /korisnik` - Create new user (superuser only)
 - `DELETE /korisnik/:id` - Delete user (superuser only)
 
-### Items (Artikli)
-- `GET /artikl` - Get all items
-- `POST /artikl` - Create new item (superuser only)
-- `DELETE /artikl/:id` - Delete item (superuser only)
+### Products (Artikli)
+- `GET /artikl` - Get all products
+- `POST /artikl` - Create new product (superuser only)
+- `DELETE /artikl/:id` - Delete product (superuser only)
 
 ## Database Schema
 
 ### korisnik (Users)
-- `id` - Primary key
+- `idkorisnik` - Primary key (auto-increment)
 - `ime` - First name
 - `prezime` - Last name
-- `email` - Unique email
-- `password` - Hashed password
-- `uloga` - Role (user/superuser)
+- `email` - Unique email address
+- `password` - Hashed password (bcrypt)
+- `role` - User role (user/superuser)
 
-### artikl (Items)
-- `id` - Primary key
-- `sifra` - Unique item code (starts at 1000)
-- `naziv` - Item name
-- `cijena` - Price
-- `opis` - Description
+### artikl (Products)
+- `idartikl` - Primary key (auto-increment)
+- `sifra` - Unique product code (starts at 1000, auto-increment)
+- `naziv` - Product name
+- `cijena` - Product price
 
-### dokument (Orders)
-- `iddokument` - Primary key
-- `do_broj` - Document number
+### dokument (Orders/Documents)
+- `iddokument` - Primary key (auto-increment)
+- `do_broj` - Document/order number
 - `do_datum` - Document date
 - `do_datum_izrade` - Creation timestamp
-- `do_iznos` - Total amount
-- `korisnik_idkorisnik` - Foreign key to users
+- `do_iznos` - Total order amount
+- `korisnik_idkorisnik` - Foreign key to users table
 
 ### dokumentstavke (Order Items)
-- `iddokumentstavke` - Primary key
-- `ds_kolicina` - Quantity
+- `iddokumentstavke` - Primary key (auto-increment)
+- `ds_kolicina` - Item quantity
 - `ds_cijena` - Price per item
-- `artikl_idartikl` - Foreign key to items
-- `dokument_iddokument` - Foreign key to documents
+- `artikl_idartikl` - Foreign key to products table
+- `dokument_iddokument` - Foreign key to documents table
+
+### session (Sessions)
+- `sid` - Session ID (primary key)
+- `sess` - Session data (JSON)
+- `expire` - Session expiration timestamp
 
 ## Authentication Flow
 
-1. **Register**: User creates account → Backend hashes password with bcrypt → Stores in PostgreSQL
-2. **Login**: User submits credentials → Backend validates → Creates server-side session → Returns session cookie
-3. **Protected Routes**: Frontend sends session cookie with each request → Backend middleware verifies session → Role guard checks user permissions
+1. **Registration**: User creates account → Backend hashes password with bcrypt → Stores in PostgreSQL
+2. **Login**: User submits credentials → Backend validates password → Creates server-side session in PostgreSQL → Returns session cookie to frontend
+3. **Protected Routes**: 
+   - Frontend sends session cookie automatically with each request
+   - Backend middleware verifies session existence and validity
+   - Role guard checks user permissions for admin-only actions
+   - Expired sessions are automatically cleaned up
 
 ## Important Notes
 
-- CoreUI Angular v5 uses directive-based modal syntax (`c-modal`) instead of component-based approach
+### Frontend (CoreUI Template)
+- Built on CoreUI Free Angular Admin Template
+- CoreUI v5 uses directive-based modal syntax (`c-modal`) instead of component-based approach
 - Using old v4 modal tags will break the UI
-- Superuser role is required for user and item management
-- Form validation is implemented on all input forms
-- Confirmation modals are displayed before any delete operation
-- CORS is configured to allow frontend-backend communication with credentials
-- Sessions are stored in PostgreSQL database with automatic expiration
-- Role guards protect admin-only routes
-- Item codes (sifra) start at 1000 and auto-increment
-- Shopping cart functionality is planned for future implementation
+- Template provides responsive layout, navigation, and UI components
+- Custom components added: confirm-modal for delete confirmations
+- SCSS used for custom styling
+
+### Backend & Security
+- Superuser role required for user and product management
+- All passwords hashed with bcrypt before storage
+- Sessions stored securely in PostgreSQL with automatic expiration
+- CORS configured to allow frontend-backend communication with credentials
+- Input validation implemented on all forms
+- SQL injection protection through parameterized queries
+
+### Business Logic
+- Product codes (sifra) start at 1000 and auto-increment
+- Confirmation modals displayed before any delete operation
+
+### Planned Features
+- Shopping cart functionality (UI elements present but not functional)
+
+## Credits
+
+**Frontend Template**: CoreUI Free Angular Admin Template
+- Created by Łukasz Holeczek and CoreUI team
+- Licensed under MIT
+- Repository: https://github.com/coreui/coreui-free-angular-admin-template
+
+**Custom Development**: Tea
 
 ## Author
 
-Tea
+Tea 
 
 ## License
 
 This project is for educational and portfolio purposes.
+
+Frontend template (CoreUI) is MIT licensed - Copyright 2024 creativeLabs Łukasz Holeczek.
+Custom backend and modifications are developed by Tea for educational purposes.
