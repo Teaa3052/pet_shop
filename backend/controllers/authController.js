@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { createUser, findByEmail } from '../models/userModel.js';
 
 export async function register(req, res) {
