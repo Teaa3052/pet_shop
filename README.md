@@ -4,8 +4,8 @@ A full-stack e-commerce web application for purchasing pet supplies, built with 
 
 ## Live Demo
 
-- **Frontend:** [Vercel URL]
-- **Backend:** [Render URL]
+- **Frontend:** https://pet-shop-phi-six.vercel.app
+- **Backend:** https://pet-shop-c1mj.onrender.com
 
 ## Features
 
