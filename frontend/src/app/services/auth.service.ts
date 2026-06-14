@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private apiUrl = `${environment.apiUrl}/api/auth`;
   private currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-
-constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {
     this.loadUserFromStorage();
   }
 
@@ -22,7 +23,7 @@ constructor(private http: HttpClient) {
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(
-      'http://localhost:3000/api/auth/login',
+      `${this.apiUrl}/login`,
       { email, password },
       { withCredentials: true }
     );
@@ -30,7 +31,7 @@ constructor(private http: HttpClient) {
 
   register(data: any): Observable<any> {
     return this.http.post(
-      'http://localhost:3000/api/auth/register',
+      `${this.apiUrl}/register`,
       data,
       { withCredentials: true }
     );
@@ -38,17 +39,15 @@ constructor(private http: HttpClient) {
 
   logOut() {
     return this.http.post(
-      'http://localhost:3000/api/auth/logout',
+      `${this.apiUrl}/logout`,
       {},
       { withCredentials: true }
     );
   }
 
-
   loadUserFromStorage() {
     const stored = localStorage.getItem('currentUser');
-
-    if(!stored ||stored == "undefined" || stored == "null") {
+    if (!stored || stored == "undefined" || stored == "null") {
       this.currentUserSubject.next(null);
       return;
     }
@@ -67,16 +66,12 @@ constructor(private http: HttpClient) {
 
   checkSession() {
     return this.http.get(
-      'http://localhost:3000/api/auth/me',
+      `${this.apiUrl}/me`,
       { withCredentials: true }
     );
   }
-  
+
   public get currentUserValue() {
     return this.currentUserSubject.value;
   }
-
 }
-
-// posrednik između login forme i backend api-ja; šalje login podatke backendu 
-// i vraća odgovor komponenti, bez da komponenta direktno komunicira s API-jem

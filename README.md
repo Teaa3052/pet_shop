@@ -1,10 +1,16 @@
 # Pet Shop - E-commerce Platform for Pet Supplies
 
-A full-stack e-commerce web application for purchasing pet supplies, built with Angular and CoreUI template on the frontend, and Node.js/Express/PostgreSQL on the backend.
+A full-stack e-commerce web application for purchasing pet supplies, built with Angular 18 and CoreUI template on the frontend, and Node.js/Express/PostgreSQL on the backend.
+
+## Live Demo
+
+- **Frontend:** [Vercel URL]
+- **Backend:** [Render URL]
 
 ## Features
 
 ### User Management
+
 - User registration and authentication
 - Session-based login system
 - Role-based access control (user vs superuser)
@@ -12,6 +18,7 @@ A full-stack e-commerce web application for purchasing pet supplies, built with 
 - Superuser can manage all users
 
 ### Product (Artikl) Management
+
 - Browse all available pet products
 - Add new products (superuser only)
 - Delete products with confirmation modal (superuser only)
@@ -19,13 +26,15 @@ A full-stack e-commerce web application for purchasing pet supplies, built with 
 - Form validation for all product inputs
 
 ### Authentication & Authorization
-- Secure user registration with password hashing
+
+- Secure user registration with password hashing (bcryptjs)
 - Session-based authentication stored in PostgreSQL
 - Role-based UI (different views for users and superusers)
 - Route guards protecting admin-only pages
 - Automatic session expiration
 
 ### UI / UX
+
 - Built with CoreUI Angular v5 free template
 - Clean, responsive layout optimized for all devices
 - Consistent modal dialogs for all critical actions
@@ -35,6 +44,7 @@ A full-stack e-commerce web application for purchasing pet supplies, built with 
 ## Technologies Used
 
 **Frontend**
+
 - Angular 18
 - CoreUI Angular v5 (Free Admin Template)
 - TypeScript
@@ -43,15 +53,23 @@ A full-stack e-commerce web application for purchasing pet supplies, built with 
 - SCSS for styling
 
 **Backend**
+
 - Node.js
 - Express
-- PostgreSQL
+- PostgreSQL (Supabase)
 - express-session + connect-pg-simple
-- bcrypt (password hashing)
+- bcryptjs (password hashing)
 - CORS
 
+**Hosting**
+
+- Frontend: Vercel
+- Backend: Render
+- Database: Supabase (PostgreSQL)
+
 ## Project Structure
-```
+
+<pre>
 Pet_shop/
 ├── frontend/
 │   └── src/
@@ -73,34 +91,17 @@ Pet_shop/
 │       │   │       └── confirm-modal.component.scss
 │       │   └── views/
 │       │       ├── artikli/
-│       │       │   ├── artikli.component.ts
-│       │       │   ├── artikli.component.html
-│       │       │   ├── artikli.component.scss
-│       │       │   └── routes.ts
 │       │       ├── dashboard/
-│       │       │   ├── dashboard.component.ts
-│       │       │   ├── dashboard.component.html
-│       │       │   ├── dashboard.component.scss
-│       │       │   └── routes.ts
 │       │       ├── korisnici/
-│       │       │   ├── korisnici.component.ts
-│       │       │   ├── korisnici.component.html
-│       │       │   ├── korisnici.component.scss
-│       │       │   └── routes.ts
 │       │       └── pages/
 │       │           ├── login/
-│       │           │   ├── login.component.ts
-│       │           │   ├── login.component.html
-│       │           │   └── login.component.scss
-│       │           ├── register/
-│       │           │   ├── register.component.ts
-│       │           │   ├── register.component.html
-│       │           │   └── register.component.scss
-│       │           └── routes.ts
+│       │           └── register/
+│       ├── environments/
+│       │   ├── environment.ts
+│       │   └── environment.development.ts
 │       ├── assets/
 │       ├── scss/
-│       ├── index.html
-│       └── angular.json
+│       └── index.html
 │
 └── backend/
     ├── controllers/
@@ -125,98 +126,43 @@ Pet_shop/
     ├── db.js
     ├── .env
     └── package.json
-```
+</pre>
 
-## Installation & Setup
+## Installation & Local Setup
 
 ### Prerequisites
+
 - Node.js LTS (v18.19+ or v20.09+)
-- PostgreSQL
+- PostgreSQL or Supabase account
 - Angular CLI (v18.0.0+)
 
 ### Backend Setup
 
 1. Navigate to backend folder:
+
 ```bash
 cd backend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create `.env` file in `backend/` folder:
+
 ```env
-DB_HOST=localhost
-DB_USER=your_postgres_user
-DB_PASSWORD=your_postgres_password
-DB_NAME=petshop_db
-DB_PORT=5432
-SESSION_SECRET=petshop-secret
+DATABASE_URL=postgresql://user:password@host:5432/database
+SESSION_SECRET=your-secret-here
+NODE_ENV=development
 PORT=3000
 ```
 
-4. Create PostgreSQL database and tables:
-```sql
-CREATE DATABASE petshop_db;
+4. Start backend server:
 
-\c petshop_db;
-
--- Users table
-CREATE TABLE korisnik (
-    idkorisnik SERIAL PRIMARY KEY,
-    ime VARCHAR(100) NOT NULL,
-    prezime VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Items table with custom sequence starting at 1000
-CREATE SEQUENCE artikl_sifra_seq START WITH 1000;
-
-CREATE TABLE artikl (
-    idartikl SERIAL PRIMARY KEY,
-    sifra INTEGER UNIQUE DEFAULT nextval('artikl_sifra_seq'),
-    naziv VARCHAR(255) NOT NULL,
-    cijena DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Documents (Orders) table
-CREATE TABLE dokument (
-    iddokument SERIAL PRIMARY KEY,
-    do_broj VARCHAR(50),
-    do_datum DATE,
-    do_datum_izrade TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    do_iznos NUMERIC,
-    korisnik_idkorisnik INTEGER REFERENCES korisnik(id) ON DELETE CASCADE
-);
-
--- Document items table
-CREATE TABLE dokumentstavke (
-    iddokumentstavke SERIAL PRIMARY KEY,
-    ds_kolicina INTEGER,
-    ds_cijena NUMERIC(10, 2),
-    artikl_idartikl INTEGER REFERENCES artikl(id) ON DELETE CASCADE,
-    dokument_iddokument INTEGER REFERENCES dokument(iddokument) ON DELETE CASCADE
-);
-
--- Sessions table
-CREATE TABLE session (
-    sid VARCHAR PRIMARY KEY,
-    sess JSON NOT NULL,
-    expire TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL
-);
-
-CREATE INDEX idx_session_expire ON session (expire);
-```
-
-5. Start backend server:
 ```bash
-node app.js
+npm start
 ```
 
 Backend runs on `http://localhost:3000`
@@ -224,85 +170,139 @@ Backend runs on `http://localhost:3000`
 ### Frontend Setup
 
 1. Navigate to frontend folder:
+
 ```bash
 cd frontend
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
-```bash
-npm start
-```
-or
+
 ```bash
 ng serve
 ```
 
 The app will be available at `http://localhost:4200`
 
-## API Endpoints
+## Deployment
 
-### Authentication
-- `POST /auth/register` - Register new user
-- `POST /auth/login` - Login user
-- `POST /auth/logout` - Logout user
+### Backend (Render)
 
-### Users (Korisnici)
-- `GET /korisnik` - Get all users (superuser only)
-- `POST /korisnik` - Create new user (superuser only)
-- `DELETE /korisnik/:id` - Delete user (superuser only)
+1. Connect GitHub repo to Render → New Web Service
+2. Set **Root Directory** to `backend`
+3. **Build command:** `npm install`
+4. **Start command:** `npm start`
+5. Add environment variables:
+   - `DATABASE_URL` — Supabase connection string (Session Pooler, port 5432)
+   - `SESSION_SECRET` — random secret string
+   - `FRONTEND_URL` — Vercel frontend URL
+   - `NODE_ENV` — `production`
 
-### Products (Artikli)
-- `GET /artikl` - Get all products
-- `POST /artikl` - Create new product (superuser only)
-- `DELETE /artikl/:id` - Delete product (superuser only)
+### Frontend (Vercel)
+
+1. Connect GitHub repo to Vercel → New Project
+2. Set **Root Directory** to `frontend`
+3. **Build command:** `ng build`
+4. **Output directory:** `dist/[project-name]/browser`
+5. Production API URL is set in `src/environments/environment.ts`
+
+### Database (Supabase)
+
+- PostgreSQL database hosted on Supabase
+- Schema imported via `pg_dump` backup using `psql` CLI with Session Pooler connection
+- Connection uses SSL (`rejectUnauthorized: false`)
 
 ## Database Schema
 
 ### korisnik (Users)
-- `idkorisnik` - Primary key (auto-increment)
-- `ime` - First name
-- `prezime` - Last name
-- `email` - Unique email address
-- `password` - Hashed password (bcrypt)
-- `role` - User role (user/superuser)
+
+| Column     | Type                | Description                |
+| ---------- | ------------------- | -------------------------- |
+| idkorisnik | SERIAL PK           | Primary key                |
+| ime        | VARCHAR(100)        | First name                 |
+| prezime    | VARCHAR(100)        | Last name                  |
+| email      | VARCHAR(255) UNIQUE | Email address              |
+| password   | VARCHAR(255)        | Hashed password (bcryptjs) |
+| role       | VARCHAR(20)         | User role (user/superuser) |
+| created_at | TIMESTAMP           | Creation timestamp         |
 
 ### artikl (Products)
-- `idartikl` - Primary key (auto-increment)
-- `sifra` - Unique product code (starts at 1000, auto-increment)
-- `naziv` - Product name
-- `cijena` - Product price
 
-### dokument (Orders/Documents)
-- `iddokument` - Primary key (auto-increment)
-- `do_broj` - Document/order number
-- `do_datum` - Document date
-- `do_datum_izrade` - Creation timestamp
-- `do_iznos` - Total order amount
-- `korisnik_idkorisnik` - Foreign key to users table
+| Column     | Type           | Description                   |
+| ---------- | -------------- | ----------------------------- |
+| idartikl   | SERIAL PK      | Primary key                   |
+| sifra      | INTEGER UNIQUE | Product code (starts at 1000) |
+| naziv      | VARCHAR(255)   | Product name                  |
+| cijena     | DECIMAL(10,2)  | Product price                 |
+| created_at | TIMESTAMP      | Creation timestamp            |
+
+### dokument (Orders)
+
+| Column              | Type        | Description           |
+| ------------------- | ----------- | --------------------- |
+| iddokument          | SERIAL PK   | Primary key           |
+| do_broj             | VARCHAR(50) | Order number          |
+| do_datum            | DATE        | Order date            |
+| do_datum_izrade     | TIMESTAMP   | Creation timestamp    |
+| do_iznos            | NUMERIC     | Total amount          |
+| korisnik_idkorisnik | INTEGER FK  | Reference to korisnik |
 
 ### dokumentstavke (Order Items)
-- `iddokumentstavke` - Primary key (auto-increment)
-- `ds_kolicina` - Item quantity
-- `ds_cijena` - Price per item
-- `artikl_idartikl` - Foreign key to products table
-- `dokument_iddokument` - Foreign key to documents table
+
+| Column              | Type          | Description           |
+| ------------------- | ------------- | --------------------- |
+| iddokumentstavke    | SERIAL PK     | Primary key           |
+| ds_kolicina         | INTEGER       | Quantity              |
+| ds_cijena           | NUMERIC(10,2) | Price per item        |
+| artikl_idartikl     | INTEGER FK    | Reference to artikl   |
+| dokument_iddokument | INTEGER FK    | Reference to dokument |
 
 ### session (Sessions)
-- `sid` - Session ID (primary key)
-- `sess` - Session data (JSON)
-- `expire` - Session expiration timestamp
+
+| Column | Type       | Description     |
+| ------ | ---------- | --------------- |
+| sid    | VARCHAR PK | Session ID      |
+| sess   | JSON       | Session data    |
+| expire | TIMESTAMP  | Expiration time |
+
+## API Endpoints
+
+### Authentication (`/api/auth`)
+
+| Method | Endpoint             | Description           |
+| ------ | -------------------- | --------------------- |
+| POST   | `/api/auth/register` | Register new user     |
+| POST   | `/api/auth/login`    | Login user            |
+| POST   | `/api/auth/logout`   | Logout user           |
+| GET    | `/api/auth/me`       | Check current session |
+
+### Users (`/api/korisnik`)
+
+| Method | Endpoint            | Description     | Access    |
+| ------ | ------------------- | --------------- | --------- |
+| GET    | `/api/korisnik`     | Get all users   | Superuser |
+| POST   | `/api/korisnik`     | Create new user | Superuser |
+| DELETE | `/api/korisnik/:id` | Delete user     | Superuser |
+
+### Products (`/api/artikli`)
+
+| Method | Endpoint           | Description        | Access    |
+| ------ | ------------------ | ------------------ | --------- |
+| GET    | `/api/artikli`     | Get all products   | All       |
+| POST   | `/api/artikli`     | Create new product | Superuser |
+| DELETE | `/api/artikli/:id` | Delete product     | Superuser |
 
 ## Authentication Flow
 
-1. **Registration**: User creates account → Backend hashes password with bcrypt → Stores in PostgreSQL
-2. **Login**: User submits credentials → Backend validates password → Creates server-side session in PostgreSQL → Returns session cookie to frontend
-3. **Protected Routes**: 
-   - Frontend sends session cookie automatically with each request
+1. **Registration:** User creates account → Backend hashes password with bcryptjs → Stores in PostgreSQL
+2. **Login:** User submits credentials → Backend validates password → Creates server-side session in PostgreSQL → Returns session cookie to frontend
+3. **Protected Routes:**
+   - Frontend sends session cookie automatically with each request (`withCredentials: true`)
    - Backend middleware verifies session existence and validity
    - Role guard checks user permissions for admin-only actions
    - Expired sessions are automatically cleaned up
@@ -310,44 +310,47 @@ The app will be available at `http://localhost:4200`
 ## Important Notes
 
 ### Frontend (CoreUI Template)
+
 - Built on CoreUI Free Angular Admin Template
 - CoreUI v5 uses directive-based modal syntax (`c-modal`) instead of component-based approach
-- Using old v4 modal tags will break the UI
-- Template provides responsive layout, navigation, and UI components
-- Custom components added: confirm-modal for delete confirmations
-- SCSS used for custom styling
+- Angular environment files (`environment.ts` / `environment.development.ts`) used for API URL configuration — no hardcoded `localhost` URLs in service files
 
 ### Backend & Security
+
 - Superuser role required for user and product management
-- All passwords hashed with bcrypt before storage
+- All passwords hashed with `bcryptjs` (cross-platform compatible, no native bindings)
 - Sessions stored securely in PostgreSQL with automatic expiration
-- CORS configured to allow frontend-backend communication with credentials
+- CORS configured to allow both local development and production Vercel frontend
+- `cookie.secure` and `cookie.sameSite` adjusted automatically based on `NODE_ENV`
 - Input validation implemented on all forms
 - SQL injection protection through parameterized queries
+- `SESSION_SECRET` stored as environment variable (not hardcoded)
 
 ### Business Logic
-- Product codes (sifra) start at 1000 and auto-increment
+
+- Product codes (`sifra`) start at 1000 and auto-increment via PostgreSQL sequence
 - Confirmation modals displayed before any delete operation
 
 ### Planned Features
-- Shopping cart functionality (UI elements present but not functional)
+
+- Shopping cart functionality (UI elements present but not yet functional)
 
 ## Credits
 
-**Frontend Template**: CoreUI Free Angular Admin Template
+**Frontend Template:** CoreUI Free Angular Admin Template
+
 - Created by Łukasz Holeczek and CoreUI team
 - Licensed under MIT
 - Repository: https://github.com/coreui/coreui-free-angular-admin-template
 
-**Custom Development**: Tea
+**Custom Development:** Tea
 
 ## Author
 
-Tea 
+Tea
 
 ## License
 
 This project is for educational and portfolio purposes.
-
 Frontend template (CoreUI) is MIT licensed - Copyright 2024 creativeLabs Łukasz Holeczek.
 Custom backend and modifications are developed by Tea for educational purposes.

@@ -4,19 +4,21 @@ import cors from 'cors';
 import pool from './db.js';
 import connectPgSimple from 'connect-pg-simple';
 
-
 import authRoutes from './routes/auth.routes.js';
 import korisnikRoutes from './routes/korisnik.routes.js';
 import artikliRoutes from './routes/artikli.routes.js';
-//import cartRoutes from './routes/cart.routes.js';
-//import orderRoutes from './routes/order.routes.js';
 
 const app = express(); 
 
 const PgSession = connectPgSimple(session);
 
-app.use(cors ({
-    origin: 'http://localhost:4200',
+const allowedOrigins = [
+    'http://localhost:4200',
+    process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+    origin: allowedOrigins,
     credentials: true
 }));
 
@@ -27,32 +29,29 @@ app.use(session({
         pool: pool,
         tableName: 'session'
     }),
-    secret: 'petshop-secret',
+    secret: process.env.SESSION_SECRET || 'petshop-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        sameSite: 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }
 }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/korisnik', korisnikRoutes);
 app.use('/api/artikli', artikliRoutes);
-//app.use('/cart', cartRoutes)
-//app.use('/order', orderRoutes);
 
-app.listen(3000, () => {
-    console.log('Backend running on http://localhost:3000');
+app.get('/', (req, res) => {
+    res.send('Backend is running');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Backend running on port ${PORT}`);
 });
 
 pool.connect()
     .then(() => console.log("Connected to PostgreSQL"))
-    .catch(err => console.error("Database connection error: ", err))
-
-
-app.get('/', (req, res) => {
-  res.send('Backend is running');
-});
-
+    .catch(err => console.error("Database connection error: ", err));
