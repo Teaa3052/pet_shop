@@ -124,7 +124,11 @@ export class ArtikliComponent implements OnInit {
         this.ucitajArtikle();
         this.zatvoriPotvrdu();
       },
-      error: (err) => console.error("Greška pri brisanju artikla", err)
+      error: (err) => {
+        console.error("Greška pri brisanju artikla", err);
+        alert(err.error?.error || 'Greška pri brisanju artikla');
+        this.zatvoriPotvrdu();
+      }
     });
   }
 }

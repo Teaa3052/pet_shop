@@ -101,6 +101,8 @@ export class KorisniciComponent implements OnInit {
       },
       error: (err) => {
         console.error('Greška pri brisanju korisnika', err);
+        alert(err.error?.error || err.error?.message || 'Greška pri brisanju korisnika');
+        this.zatvoriPotvrdu();
       }
     });
   }

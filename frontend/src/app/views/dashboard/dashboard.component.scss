@@ -10,9 +10,9 @@ c-card-body h5[cCardTitle] {
   text-align: center;
 }
 
-.custom-card-group {
-  display: flex;
-  gap: 20px; 
+.slika-artikla {
+  height: 200px;
+  object-fit: cover;
 }
 
 .parent-container {

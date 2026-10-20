@@ -31,6 +31,6 @@ export const deleteArtikl = async (id) => {
         return result.rowCount;
     } catch (err) {
         console.error("Model error:", err.message);
-        throw new Error(err.message);  
+        throw err;
     }
 };

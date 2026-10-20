@@ -26,6 +26,7 @@ import { NgStyle, NgTemplateOutlet, CommonModule } from '@angular/common';
 import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from '../../../services/auth.service';
+import { KosaricaService } from '../../../services/kosarica.service';
 
 @Component({
   selector: 'app-default-header',
@@ -69,7 +70,8 @@ export class DefaultHeaderComponent {
   constructor(
     public auth: AuthService,
     private router: Router,
-    private colorModeService: ColorModeService
+    private colorModeService: ColorModeService,
+    private kosarica: KosaricaService
   ) {
     this.user$ = this.auth.currentUser$;
   }
@@ -104,6 +106,7 @@ export class DefaultHeaderComponent {
     this.auth.logOut().subscribe({
       next: () => {
         this.auth.clearUser();
+        this.kosarica.isprazni();
         this.router.navigate(['/login']);
       },
       error: (err) => console.error("LOGOUT ERROR:", err)

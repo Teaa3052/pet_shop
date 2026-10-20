@@ -61,6 +61,10 @@ export const deleteUser = async (req, res) => {
     }
     res.json({ message: 'User successfully deleted'})
   } catch (err) {
+    // foreign_key_violation - korisnik ima narudžbe
+    if (err.code === '23503') {
+      return res.status(400).json({ error: 'User has orders and cannot be deleted' });
+    }
     res.status(500).json({error: err.message});
   }
 }

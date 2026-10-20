@@ -7,6 +7,7 @@ import connectPgSimple from 'connect-pg-simple';
 import authRoutes from './routes/auth.routes.js';
 import korisnikRoutes from './routes/korisnik.routes.js';
 import artikliRoutes from './routes/artikli.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 const app = express(); 
 
@@ -50,6 +51,7 @@ app.use(session({
 app.use('/api/auth', authRoutes);
 app.use('/api/korisnik', korisnikRoutes);
 app.use('/api/artikli', artikliRoutes);
+app.use('/api/narudzba', orderRoutes);
 
 app.get('/', (req, res) => {
     res.send('Backend is running');

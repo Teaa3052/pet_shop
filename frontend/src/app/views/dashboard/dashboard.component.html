@@ -1,6 +1,6 @@
-<div class="parent-container"> 
+<div class="parent-container">
   <button class="kosarica" cButton (click)="toggleModal()" color=" ">
-    <c-badge class="badge-position" color="danger" shape="rounded-pill">{{ getTotalItemCount() }}</c-badge>
+    <c-badge class="badge-position" color="danger" shape="rounded-pill">{{ kosarica.ukupnoKomada }}</c-badge>
     <span class="visually-hidden">broj artikala</span>
     <img src="assets/images/cart.png" alt="cart">
   </button>
@@ -10,56 +10,51 @@
       <button (click)="toggleModal()" cButtonClose></button>
     </c-modal-header>
     <c-modal-body>
-      <ul class="list-group list-group-light">
-        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of items; index as i">
+      <p class="text-success" *ngIf="porukaNarudzbe">{{ porukaNarudzbe }}</p>
+      <p *ngIf="kosarica.stavke.length === 0 && !porukaNarudzbe">Košarica je prazna.</p>
+
+      <ul class="list-group list-group-light" *ngIf="kosarica.stavke.length > 0">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let stavka of kosarica.stavke">
           <div class="d-flex align-items-center">
-            <img [src]="item.image" [alt]="item.name" style="width: 65px; height: 55px" class="cil-square" />
+            <img [src]="slika(stavka.naziv)" [alt]="stavka.naziv" style="width: 65px; height: 55px; object-fit: cover;" />
             <div class="ms-4">
-              <p class="fw-bold mb-1">{{ item.name }}</p>
+              <p class="fw-bold mb-1">{{ stavka.naziv }}</p>
+              <p class="text-body-secondary mb-0">{{ stavka.cijena | number:'1.2-2' }} €</p>
             </div>
           </div>
           <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary btn-sm me-2" (click)="decrement(i)">-</button>
-            <c-badge color="secondary">{{ item.count }}</c-badge>
-            <button class="btn btn-outline-secondary btn-sm ms-2" (click)="increment(i)">+</button>
+            <button class="btn btn-outline-secondary btn-sm me-2" (click)="kosarica.promijeniKolicinu(stavka.idartikl, -1)">-</button>
+            <c-badge color="secondary">{{ stavka.kolicina }}</c-badge>
+            <button class="btn btn-outline-secondary btn-sm ms-2" (click)="kosarica.promijeniKolicinu(stavka.idartikl, 1)">+</button>
           </div>
         </li>
       </ul>
+
+      <p class="fw-bold text-end mt-3 mb-0" *ngIf="kosarica.stavke.length > 0">
+        Ukupno: {{ kosarica.ukupnaCijena | number:'1.2-2' }} €
+      </p>
+      <p class="text-danger mt-2 mb-0" *ngIf="greskaNarudzbe">{{ greskaNarudzbe }}</p>
     </c-modal-body>
     <c-modal-footer>
       <button (click)="toggleModal()" cButton color="secondary">Zatvori</button>
-      <button cButton color="primary">Nastavi na narudžbu</button>
+      <button cButton color="primary" (click)="naruci()" [disabled]="kosarica.stavke.length === 0 || saljeSe">
+        Potvrdi narudžbu
+      </button>
     </c-modal-footer>
   </c-modal>
 </div>
 <br>
-<c-card-group class="mb-4 custom-card-group">
-    <c-card>
-      <img cCardImg="top" src="assets/images/food.jpg" alt="Food">
+<c-row>
+  <c-col xs="12" sm="6" lg="4" class="mb-4" *ngFor="let a of artikli">
+    <c-card class="h-100">
+      <img cCardImg="top" class="slika-artikla" [src]="slika(a.naziv)" [alt]="a.naziv">
       <c-card-body>
-        <h5 cCardTitle>Hrana za pse</h5>
+        <h5 cCardTitle>{{ a.naziv }}</h5>
+        <p class="text-center text-body-secondary">{{ a.cijena | number:'1.2-2' }} €</p>
         <div style="display: flex; justify-content: center;">
-        <button cButton color="dark" variant="outline">Dodaj</button>
+        <button cButton color="dark" variant="outline" (click)="dodajUKosaricu(a)">Dodaj</button>
         </div>
       </c-card-body>
     </c-card>
-    <c-card>
-      <img cCardImg="top" src="assets/images/collar.jpg" alt="Ogrlica">
-      <c-card-body>
-        <h5 cCardTitle>Ogrlica za pse</h5>
-        <div style="display: flex; justify-content: center;">
-        <button cButton color="dark" variant="outline">Dodaj</button>
-        </div>
-      </c-card-body>
-    </c-card>
-    <c-card>
-      <img cCardImg="top" src="assets/images/cookies.jpg" alt="Cookies">
-      <c-card-body>
-        <h5 cCardTitle>Poslastica za pse</h5>
-        <div style="display: flex; justify-content: center;">
-        <button cButton color="dark" variant="outline">Dodaj</button>
-        </div>
-    </c-card-body>
-    </c-card>
-  </c-card-group>
-
+  </c-col>
+</c-row>

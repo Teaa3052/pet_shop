@@ -48,6 +48,10 @@ export const deleteArtikl = async (req, res) => {
         res.json({ message: "Artikl successfully deleted" });
 
     } catch (err) {
+        // foreign_key_violation - artikl je na nekoj narudžbi
+        if (err.code === '23503') {
+            return res.status(400).json({ error: "Artikl is part of an order and cannot be deleted" });
+        }
         console.error("Greška u deleteArtikl:", err.message);
         res.status(500).json({ error: err.message });
     }
