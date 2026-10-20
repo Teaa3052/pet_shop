@@ -1,70 +1,6 @@
 <c-col xs="12">
   <c-card class="mb-4">
     <c-card-body>
-      <!-- Gumb za otvaranje modala -->
-      <button 
-        *ngIf="isSuperuser"
-        cButton color="secondary" 
-        class="buttonDodaj" 
-        (click)="otvoriModal()">
-        Dodaj korisnika
-      </button>
-
-      <!-- MODAL ZA DODAVANJE -->
-      <c-modal [visible]="visible">
-        <c-modal-header>
-          <h5 cModalTitle>Dodaj novog korisnika</h5>
-          <button cButtonClose (click)="zatvoriModal()"></button>
-        </c-modal-header>
-      <c-modal-body>
-
-
-          <form cForm>
-
-            <!-- IME -->
-            <div class="mb-3">
-              <label for="ime">Ime:</label>
-              <input
-                id="ime"
-                name="ime"
-                type="text"
-                class="form-control"
-                [(ngModel)]="noviKorisnik.ime"              >
-            </div>
-
-            <!-- PREZIME -->
-            <div class="mb-3">
-              <label for="prezime">Prezime:</label>
-              <input
-                id="prezime"
-                name="prezime"
-                type="text"
-                class="form-control"
-                [(ngModel)]="noviKorisnik.prezime"
-              >
-            </div>
-
-            <!-- EMAIL -->
-            <div class="mb-3">
-              <label for="email">Email:</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                class="form-control"
-                [(ngModel)]="noviKorisnik.email"
-              >
-            </div>
-
-          </form>
-        </c-modal-body>
-
-        <c-modal-footer>
-          <button cButton color="secondary" (click)="zatvoriModal()">Zatvori</button>
-          <button cButton color="primary" (click)="spremiKorisnika()">Spremi</button>
-        </c-modal-footer>
-      </c-modal>
-
       <!-- MODAL ZA POTVRDU BRISANJA -->
       <c-modal [visible]="potvrdaVisible">
         <c-modal-header>
@@ -81,8 +17,6 @@
           <button cButton color="danger" (click)="potvrdiBrisanje()">Obriši</button>
         </c-modal-footer>
       </c-modal>
-
-      <br><br>
 
       <!-- TABLICA -->
       <table [hover]="true" cTable color="dark">

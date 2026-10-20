@@ -4,7 +4,6 @@ import {
   getAllUsers,
   updateUser,
   deleteUser as deleteUserModel,
-  createUserNoPassword
 } from '../models/userModel.js';
 
 // GET /api/korisnik
@@ -29,21 +28,6 @@ export const getUser = async (req, res) => {
     } catch (err) {
       res.status(500).json({ error: err.message})
     }
-};
-
-export const addUserNoPass = async (req, res) => {
-  const { ime, prezime, email } = req.body;
-
-  try {
-  const newUser = await createUserNoPassword(ime, prezime, email);
-  res.status(201).json(newUser);
-} catch (err) {
-  if (err.code === '23505') { // unique_violation
-    return res.status(400).json({ error: 'Email already exist' });
-  }
-  res.status(500).json({ error: err.message });
-}
-
 };
 
 

@@ -286,7 +286,6 @@ The app will be available at `http://localhost:4200`
 | Method | Endpoint            | Description     | Access    |
 | ------ | ------------------- | --------------- | --------- |
 | GET    | `/api/korisnik`     | Get all users   | Superuser |
-| POST   | `/api/korisnik`     | Create new user | Superuser |
 | DELETE | `/api/korisnik/:id` | Delete user     | Superuser |
 
 ### Products (`/api/artikli`)

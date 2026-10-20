@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { KorisniciService } from '../../services/korisnici.service';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AuthService } from '../../services/auth.service';
@@ -17,7 +16,7 @@ import {
 } from '@coreui/angular';
 
 interface Korisnik {
-  id: number;
+  idkorisnik: number;
   ime: string;
   prezime: string;
   email: string;
@@ -29,7 +28,6 @@ interface Korisnik {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     RowComponent,
     ColComponent,
     CardComponent,
@@ -47,18 +45,9 @@ export class KorisniciComponent implements OnInit {
 
   korisnici: Korisnik[] = [];
 
-  // Modal za dodavanje
-  visible = false;
-
   // Modal za potvrdu brisanja
   potvrdaVisible = false;
   korisnikZaBrisanje: Korisnik | null = null;
-
-  noviKorisnik: Partial<Korisnik> = {
-    ime: '',
-    prezime: '',
-    email: ''
-  };
 
   constructor(
     private korisniciService: KorisniciService,
@@ -86,32 +75,6 @@ export class KorisniciComponent implements OnInit {
   }
 
 
-  otvoriModal(): void {
-    this.noviKorisnik = { ime: '', prezime: '', email: '' };
-    this.visible = true;
-  }
-
-  zatvoriModal(): void {
-    this.visible = false;
-  }
-
-  spremiKorisnika(): void {
-    if (!this.noviKorisnik.ime || !this.noviKorisnik.prezime || !this.noviKorisnik.email) {
-      alert('Sva polja su obavezna');
-      return;
-    }
-
-    this.korisniciService.addKorisnik(this.noviKorisnik).subscribe({
-      next: () => {
-        this.ucitajKorisnike();
-        this.zatvoriModal();
-      },
-      error: (err) => {
-        console.error('Greška pri dodavanju korisnika', err);
-      }
-    });
-  }
-
   otvoriPotvrdu(korisnik: Korisnik): void {
     this.korisnikZaBrisanje = korisnik;
     this.potvrdaVisible = true;
@@ -131,7 +94,7 @@ export class KorisniciComponent implements OnInit {
       return;
     }
 
-    this.korisniciService.deleteKorisnik(this.korisnikZaBrisanje.id).subscribe({
+    this.korisniciService.deleteKorisnik(this.korisnikZaBrisanje.idkorisnik).subscribe({
       next: () => {
         this.ucitajKorisnike();
         this.zatvoriPotvrdu();

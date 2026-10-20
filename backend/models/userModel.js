@@ -23,7 +23,7 @@ export const findByEmail = async (email) => {
 }
 
 export const getAllUsers = async () => {
-    const result = await pool.query('SELECT * FROM korisnik');
+    const result = await pool.query('SELECT idkorisnik, ime, prezime, email, role FROM korisnik');
     return result.rows;
 }
 
@@ -47,21 +47,9 @@ export const updateUser = async (id, ime, prezime, email) => {
 
 export const deleteUser = async (id) => {
     const query = `DELETE FROM korisnik WHERE idkorisnik = $1`;
-    await pool.query(query, [id]);
-    return true;
+    const result = await pool.query(query, [id]);
+    return result.rowCount > 0;
 }
 
-export const createUserNoPassword = async (ime, prezime, email) => {
-  const query = `
-    INSERT INTO korisnik (ime, prezime, email)
-    VALUES ($1, $2, $3)
-    RETURNING idkorisnik, ime, prezime, email
-  `;
-
-  const values = [ime, prezime, email];
-
-  const result = await pool.query(query, values);
-  return result.rows[0];
-}
 
 

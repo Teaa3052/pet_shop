@@ -34,7 +34,7 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => { 
-        this.errorMessage = err.error?.error || 'Neispravni podaci';
+        this.errorMessage = err.error?.message || 'Neispravni podaci';
       }
     });
   }

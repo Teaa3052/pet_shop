@@ -17,12 +17,6 @@ export class KorisniciService {
         });
     }
 
-    addKorisnik(korisnik: any) {
-        return this.http.post(this.apiUrl, korisnik, {
-            withCredentials: true
-        });
-    }
-
     deleteKorisnik(id: number) {
         return this.http.delete(`${this.apiUrl}/${id}`, {
             withCredentials: true

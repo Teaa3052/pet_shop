@@ -45,7 +45,18 @@ export async function login(req, res) {
       role: user.role
     };
 
-    return res.json({ user: req.session.user });
+
+    req.session.save((err) => {
+      if (err) {
+        console.error("SESSION SAVE ERROR:", err);
+        return res.status(500).json({
+            message:"Session save failed"
+        });
+      }
+
+
+      return res.json({ user: req.session.user });
+    });
 
   } catch (err) {
     console.error("Error:", err.message);
@@ -53,19 +64,32 @@ export async function login(req, res) {
   }
 }
 
-export function logout(req, res) {
-  req.session.destroy(err => {
-    if (err) return res.status(500).json({ message: 'Logout failed' });
-
-    res.clearCookie('connect.sid', {
-      path:'/',
-      httpOnly: true,
-      secure: false
-    })
-    return res.json({ message: 'Logged out' });
-  });
+export function currentUser(req, res) {
+    return res.json(req.session.user || null);
 }
 
-export function currentUser(req, res) {
-  return res.json(req.session.user || null);
+
+export function logout(req, res) {
+
+    console.log("LOGOUT CONTROLLER POZVAN");
+    console.log("LOGOUT SID:", req.sessionID);
+    console.log("LOGOUT USER:", req.session.user);
+
+    req.session.destroy(err => {
+
+        if (err) {
+            console.log("DESTROY ERROR:", err);
+            return res.status(500).json({
+                message: "Logout failed"
+            });
+        }
+
+        console.log("SESSION DESTROYED");
+
+        res.clearCookie('connect.sid');
+
+        return res.json({
+            message: "Logged out"
+        });
+    });
 }

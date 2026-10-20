@@ -17,11 +17,6 @@ const allowedOrigins = [
     process.env.FRONTEND_URL
 ].filter(Boolean);
 
-app.options('*', cors({
-    origin: allowedOrigins,
-    credentials: true
-}));
-
 app.set('trust proxy', 1);
 
 app.use(cors({
@@ -29,20 +24,26 @@ app.use(cors({
     credentials: true
 }));
 
+
 app.use(express.json());
+
+console.log("SESSION SECRET EXISTS:", !!process.env.SESSION_SECRET);
+console.log("NODE ENV:", process.env.NODE_ENV);
 
 app.use(session({
     store: new PgSession({
         pool: pool,
         tableName: 'session'
     }),
-    secret: process.env.SESSION_SECRET || 'petshop-secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: process.env.NODE_ENV === 'production'
+            ? 'none'
+            : 'lax'
     }
 }));
 

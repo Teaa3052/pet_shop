@@ -9,7 +9,7 @@ export const validateRegister = (req, res, next) => {
         return res.status(400).json ({ message: "Invalid email format!" });
     }
 
-    if (password < 8) {
+    if (password.length < 8) {
         return res.status(400).json ({ message: "Password is too short!" })
     }
 
